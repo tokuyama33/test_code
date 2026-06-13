@@ -8,6 +8,11 @@ on:
   #  - cron: '0 22 * * *'  # 22:00 UTC = 7:00 JST
   workflow_dispatch:      # for manual testing
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     timeout-minutes: 60
@@ -16,8 +21,8 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
+      #matrix:
+      #  browser: [chromium, firefox, webkit]
 
     steps:
       - name: Checkout code
