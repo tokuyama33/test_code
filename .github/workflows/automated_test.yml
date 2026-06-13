@@ -40,6 +40,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: automated-test-report
-          path: automated-test-report/
+          name: Playwright report
+          path: playwright-report/
           retention-days: 30
