@@ -8,6 +8,15 @@ on:
   #  - cron: '0 22 * * *'  # 22:00 UTC = 7:00 JST
   workflow_dispatch:      # for manual testing
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   test:
     timeout-minutes: 60
@@ -16,8 +25,8 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
+      #matrix:
+      #  browser: [chromium, firefox, webkit]
 
     steps:
       - name: Checkout code
@@ -37,9 +46,25 @@ jobs:
       - name: Run Automated tests
         run: npx playwright test
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: Playwright report
           path: playwright-report/
           retention-days: 30
+
+      - name: Setup Github Pages
+        uses: actions/configure-pages@v5
+        if: always() && github.ref == 'refs/heads/main'
+
+      - name: Upload Artifacts to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        if: always() && github.ref == 'refs/heads/main'
+        with:
+          path: ./playwright-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        if: always() && github.ref == 'refs/heads/main'
