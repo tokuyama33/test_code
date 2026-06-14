@@ -1,9 +1,19 @@
 name: automated_test
 on:
   push:
-    branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'tests/**'
+      - 'package-lock.json'
+      - 'package.json'
+      - 'playwright.config.ts'
   pull_request:
-    branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'tests/**'
+      - 'package-lock.json'
+      - 'package.json'
+      - 'playwright.config.ts'
   #schedule:
   #  - cron: '0 22 * * *'  # 22:00 UTC = 7:00 JST
   workflow_dispatch:      # for manual testing
